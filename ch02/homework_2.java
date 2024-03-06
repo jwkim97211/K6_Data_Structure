@@ -8,23 +8,23 @@ class PhyscData implements Comparable<PhyscData> {
 	double vision;
 
 	public PhyscData(String name, int height, double vision) {
-
+		this.name = name;
+		this.height = height;
+		this.vision = vision;
 	}
 
 	@Override
 	public String toString() {
-		return "PhyscData [name=" + name + ", height=" + height + ", vision=" + vision + "]";
+		return "[name=" + name + ", height=" + height + ", vision=" + vision + "]";
 	}
 
 	@Override
 	public int compareTo(PhyscData p) {
 		return this.name.compareTo(p.name);
-
 	}
 
 	public int equals(PhyscData p) {
 		return this.name.compareTo(p.name);
-
 	}
 }
 
@@ -42,27 +42,36 @@ public class homework_2 {
 					swap(arr, i, j);
 			}
 		}
-
 	}
 
-	static boolean search(PhyscData[] arr,PhyscData myobject) {
-		boolean flag=false;
+	static boolean search(PhyscData[] arr, PhyscData p) {
+		boolean flag = false;
 		for (int i = 0; i < arr.length; i++) {
-				if (arr[i].equals(myobject) == 0)
-					flag=true;
+			if (arr[i].equals(p) == 0) {
+				flag = true;
+				System.out.println("일치합니다.");
+			} else {
+				System.out.println("불일치합니다.");
+			}
 		}
 		return flag;
 	}
 
 	public static void main(String[] args) {
-		PhyscData[] data = { new PhyscData("홍길동", 162, 0.3), new PhyscData("홍동", 164, 1.3),
-				new PhyscData("홍길", 152, 0.7), new PhyscData("김홍길동", 172, 0.3), new PhyscData("이길동", 182, 0.6),
-				new PhyscData("박길동", 167, 0.2), new PhyscData("최길동", 169, 0.5), };
+		PhyscData[] data = { 
+				new PhyscData("홍길동", 162, 0.3), 
+				new PhyscData("홍동", 164, 1.3),
+				new PhyscData("홍길", 152, 0.7), 
+				new PhyscData("김홍길동", 172, 0.3), 
+				new PhyscData("이길동", 182, 0.6),
+				new PhyscData("박길동", 167, 0.2), 
+				new PhyscData("최길동", 169, 0.5), 
+				};
 		showData(data);
 		sortData(data);
 		// Arrays.sort(null, null);//comparator가 필요하다
 		showData(data);
-		PhyscData myobject = new PhyscData("홍길동", 162, 0.3);
+		PhyscData myobject = new PhyscData("박길동", 167, 0.2);
 		search(data, myobject);
 	}
 
@@ -71,5 +80,4 @@ public class homework_2 {
 			System.out.print(item + " ");
 		System.out.println();
 	}
-
 }
