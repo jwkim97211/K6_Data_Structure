@@ -77,7 +77,7 @@ public class homework_2 {
 
 	static void showData(PhyscData[] arr) {
 		for (PhyscData item : arr)
-			System.out.print(item + " ");
+			System.out.print(item.toString() + " ");
 		System.out.println();
 	}
 }
