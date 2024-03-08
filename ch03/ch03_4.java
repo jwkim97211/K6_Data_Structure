@@ -12,23 +12,26 @@ import java.util.Random;
 public class ch03_4 {
 	public static void main(String[] args) {
 		int[] data = new int[10];
-		inputData(data);// 구현 반복 숙달 훈련
+		inputData(data);
 
 		showList("정렬 전 배열[]", data);
-		sortData(data);// 구현 반복 숙달 훈련
-		// Arrays.sort(data);
-		showList("정렬 후 배열[]", data);// 구현 반복 숙달 훈련
 
 		int key = 13;
 		int resultIndex = linearSearch(data, key);
 		System.out.println("\nlinearSearch(13): result = " + resultIndex);
+		System.out.println();
 
+		sortData(data);
+		// Arrays.sort(data);
+		showList("정렬 후 배열[]", data);
+		
 		key = 19;
 		resultIndex = binarySearch(data, key);
 		System.out.println("\nbinarySearch(19): result = " + resultIndex);
 
 		key = 10;
-		Arrays.binarySearch(data, key);
+		resultIndex = Arrays.binarySearch(data, key);
+		System.out.println("\nArrays.binarySearch(10): result = " + resultIndex);
 
 	}
 

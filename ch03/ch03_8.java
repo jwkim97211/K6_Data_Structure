@@ -9,7 +9,17 @@ class PhyscData3 {
 	String name;
 	int height;
 	double vision;
+	
+	public PhyscData3(String name, int height, double vision) {
+		this.name = name;
+		this.height = height;
+		this.vision = vision;
+	}
 
+	@Override
+	public String toString() {
+		return "[name=" + name + ", height=" + height + ", vision=" + vision + "]";
+	}
 }
 
 class compname implements Comparator<PhyscData3> {
@@ -23,10 +33,9 @@ class compname implements Comparator<PhyscData3> {
 		else
 			return 0;
 	}
-
 }
 class compheight implements Comparator<PhyscData3> {
-
+	
 	@Override
 	public int compare(PhyscData3 o1, PhyscData3 o2) {
 		if (o1.height>o2.height)
@@ -36,16 +45,13 @@ class compheight implements Comparator<PhyscData3> {
 		else
 			return 0;
 	}
-
 }
 
 public class ch03_8 {
-	static final Comparator<PhyscData3> HEIGHT_ORDER = new compname();
-
-	static void showData(String topic, String[] data) {
+	static void showData(String topic, PhyscData3[] data) {
 		System.out.println(topic + " : ");
-		for (String item : data)
-			System.out.println(item + " ");
+		for (PhyscData3 item : data)
+			System.out.println(item.toString() + " ");
 	}
 
 	public static void main(String[] args) {
@@ -58,16 +64,28 @@ public class ch03_8 {
 							  new PhyscData3("길동", 167, 0.5), 
 							  };
 
-		Arrays.binarySearch(data, key, HEIGHT_ORDER);
-		Arrays.binarySearch(data, key, new compheight());
-		showData("정렬전 객체 배열", data);
-		Arrays.sort(data, HEIGHT_ORDER);
-
-		showData("정렬후 객체 배열", data);
-		PhyscData3 key = new PhyscData3("길동", 167, 0.2);
-
-		int idx = Arrays.binarySearch(data, key, HEIGHT_ORDER);
-		System.out.println("\nArrays.binarySearch(): result = " + idx);
+		Arrays.sort(data, new compname());	//이진검색은 먼저 정렬을 해야함
+		PhyscData3 key1 = new PhyscData3("김홍길동", 172, 0.3);
+		int idx1 = Arrays.binarySearch(data, key1, new compname());
+		System.out.println("Arrays.binarySearch()를 사용한 이름 정렬 : result = " + idx1);
+		System.out.println();
+		showData("이름 정렬후 객체 배열", data);
+		System.out.println();
+		
+		Arrays.sort(data, new compheight());
+		PhyscData3 key2 = new PhyscData3("길동", 167, 0.2);
+		int idx2 = Arrays.binarySearch(data, key2, new compheight());
+		System.out.println("Arrays.binarySearch()를 사용한 키 정렬 : result = " + idx2);
+		System.out.println();
+		showData("키 정렬후 객체 배열", data);
+		System.out.println();
+		
+		PhyscData3 key3 = new PhyscData3("김홍길동", 172, 0.3);
+		PhyscData3 key4 = new PhyscData3("홍동", 164, 1.3);
+		int idx3 = Arrays.binarySearch(data, key3, new compname());
+		System.out.println("Arrays.binarySearch(): result = " + idx3);
+		int idx4 = Arrays.binarySearch(data, key4, new compheight());
+		System.out.println("Arrays.binarySearch(): result = " + idx4);
 	}
 
 }

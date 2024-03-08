@@ -7,10 +7,8 @@ import java.util.List;
 
 public class ch03_3 {
 	
-	public static void removeElement(String[] arr, int index) {
-		List<String> list = Arrays.asList(arr);
+	public static void removeElement(List<String> list, int index) {
 		list.remove(index);
-		list.toArray(arr);
 	}
 
 	static void getList(List<String> list) {
@@ -35,35 +33,34 @@ public class ch03_3 {
 			System.out.println(item);
 	}
 
-//	static void swap(String[] list, int ind1, int ind2) {
-//		String tmp = list[ind1];
-//		list[ind1] = list[ind2];
-//		list[ind2] = tmp;
-//	}
-
-	static void sortList(List<String> list) {
-		 list.sort(String.CASE_INSENSITIVE_ORDER);
-		// list.sort(Comparator.naturalOrder());
-		// 방법2 리스트를 스트링 배열로 변환
-//		String cities[] = new String[0];
-//		cities = list.toArray(cities);
-//		for (int i = 0; i < cities.length; i++) {
-//			for (int j = i + 1; j < cities.length; j++) {
-//				if (cities[i].compareTo(cities[j]) > 0)
-//					swap(cities, i, j);
-//			}
-//		}
-//		list=Arrays.asList(cities);
-//		System.out.println(list);
+	static void swap(String[] list, int ind1, int ind2) {
+		String tmp = list[ind1];
+		list[ind1] = list[ind2];
+		list[ind2] = tmp;
 	}
 
-	static void removeDuplicateList(List<String> list) {
+	static void sortList(List<String> list) {
+		//list.sort(String.CASE_INSENSITIVE_ORDER);
+		// list.sort(Comparator.naturalOrder());
+		// 방법2 리스트를 스트링 배열로 변환
 		String cities[] = new String[0];
 		cities = list.toArray(cities);
 		for (int i = 0; i < cities.length; i++) {
 			for (int j = i + 1; j < cities.length; j++) {
-				if(cities[i].compareTo(cities[j])==0) {
-					removeElement(cities,j);
+				if (cities[i].compareTo(cities[j]) > 0)
+					swap(cities, i, j);
+			}
+		}
+		list.clear();
+		list.addAll(Arrays.asList(cities));
+	}
+
+	static void removeDuplicateList(List<String> list) {
+		for (int i = 0; i < list.size(); i++) {
+			for (int j = i + 1; j < list.size(); j++) {
+				if(list.get(i).equals(list.get(j))) {
+					removeElement(list,j);
+					j--;	//List에서 index가 j인 요소삭제 후 j 뒤에 있는 요소들이 앞으로 떙겨지기 때문에  
 				}
 			}
 		}
@@ -83,6 +80,7 @@ public class ch03_3 {
 		showList("정렬후", list);
 		// 리스트에서 중복제거
 		removeDuplicateList(list);
+		System.out.println();
 		showList("중복제거후", list);
 	}
 }

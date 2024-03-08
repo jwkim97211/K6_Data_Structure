@@ -14,7 +14,7 @@ class PhyscData2 implements Comparable<PhyscData2> {
 	int height;
 	double vision;
 
-	public PhyscData2(String string, int i, double d) {
+	public PhyscData2(String name, int height, double vision) {
 		this.name = name;
 		this.height = height;
 		this.vision = vision;
@@ -50,6 +50,11 @@ public class ch03_6_1 {
 		arr[ind2] = tmp;
 	}
 	
+	static void reverse(PhyscData2[] a) {
+		for (int i = 0; i < a.length / 2; i++)
+			swap(a, i, a.length - i - 1);
+	}
+	
 	static void sortData(PhyscData2[] arr) {
 		for (int i = 0; i < arr.length; i++) {
 			for (int j = i + 1; j < arr.length; j++) {
@@ -58,11 +63,42 @@ public class ch03_6_1 {
 			}
 		}
 	}
+	static int linearSearch(PhyscData2 [] data, PhyscData2 key) {
+        int index = -1;
+        for (int n = 0; n < data.length; n++) {
+            if (data[n].equals(key)==0) {
+                index = n;
+                break;
+            }
+        }
+        return index;
+    }
+	static int binarySearch(PhyscData2 [] data , PhyscData2 key) {
+	       int pl = 0;
+	        int pr = data.length - 1;
+	        while (pl <= pr) {
+	            int pc = (pl + pr) / 2;
+	            if (data[pc].compareTo(key)==0) {
+	                return pc;
+	            } else if (data[pc].compareTo(key)<0) {
+	                pl = pc + 1;
+	            } else {
+	                pr = pc - 1;
+	            }
+	        }
+	        return -1;
+	}
 	
 	public static void main(String[] args) {
-		PhyscData2[] data = { new PhyscData2("홍길동", 162, 0.3), new PhyscData2("나동", 164, 1.3),
-				new PhyscData2("최길", 152, 0.7), new PhyscData2("김홍길동", 172, 0.3), new PhyscData2("박동", 182, 0.6),
-				new PhyscData2("이동", 167, 0.2), new PhyscData2("길동", 167, 0.5), };
+		PhyscData2[] data = { new PhyscData2("홍길동", 162, 0.3),
+							  new PhyscData2("나동", 164, 1.3),
+							  new PhyscData2("최길", 152, 0.7), 
+							  new PhyscData2("김홍길동", 172, 0.3), 
+							  new PhyscData2("박동", 182, 0.6),
+							  new PhyscData2("이동", 167, 0.2), 
+							  new PhyscData2("길동", 167, 0.5),
+							  };
+		
 		showData("정렬전", data);
 		sortData(data);
 		showData("정렬후", data);
