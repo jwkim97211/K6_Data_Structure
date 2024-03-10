@@ -11,14 +11,27 @@ public class homework_1 {
 	static void showList(String topic, String[] list) {
 		System.out.println(topic);
 		for (String item : list)
-			System.out.print(item+"\t");
+			System.out.print(item + "\t");
 	}
 
 	static String[] mergeList(String[] s1, String[] s2) {
 		int i = 0, j = 0, k = 0;
 		String[] s3 = new String[10];
-//while문 사용
-			return s3;
+		Arrays.sort(s1);
+		Arrays.sort(s2);
+
+		while (k<10) {
+			if (s1[i].compareTo(s2[j]) < 0) {
+				s3[k] = s1[i];
+				i++;
+				k++;
+			} else if (s1[i].compareTo(s2[j]) > 0) {
+				s3[k] = s2[j];
+				j++;
+				k++;
+			}
+		}
+		return s3;
 	}
 
 	public static void main(String[] args) {
