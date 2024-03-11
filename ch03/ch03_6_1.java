@@ -27,12 +27,21 @@ class PhyscData2 implements Comparable<PhyscData2> {
 
 	@Override
 	public int compareTo(PhyscData2 p) {
-		return this.name.compareTo(p.name);
-
+		if(name.compareTo(p.name)>0)
+			return 1;
+		else if (name.compareTo(p.name)<0)
+			return -1;
+		else
+			return 0;
 	}
 
 	public int equals(PhyscData2 p) {
-		return this.name.compareTo(p.name);
+		if(name.compareTo(p.name)>0)
+			return 1;
+		else if (name.compareTo(p.name)<0)
+			return -1;
+		else
+			return 0;
 	}
 }
 
@@ -121,7 +130,7 @@ public class ch03_6_1 {
 		/*
 		 * 교재 115 Arrays.binarySearch에 의한 검색
 		 */
-		resultIndex = Arrays.binarySearch(data, key);// comparable를 사용
+		resultIndex = Arrays.binarySearch(data, key);// comparable를 사용 내가 구현한 comparable 사용
 		System.out.println("\nArrays.binarySearch(<이동,167,0.6>): result = " + resultIndex);
 	}
 

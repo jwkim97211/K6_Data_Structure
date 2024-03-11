@@ -87,5 +87,4 @@ public class ch03_8 {
 		int idx4 = Arrays.binarySearch(data, key4, new compheight());
 		System.out.println("Arrays.binarySearch(): result = " + idx4);
 	}
-
 }

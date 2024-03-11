@@ -17,10 +17,8 @@ public class homework_1 {
 	static String[] mergeList(String[] s1, String[] s2) {
 		int i = 0, j = 0, k = 0;
 		String[] s3 = new String[10];
-		Arrays.sort(s1);
-		Arrays.sort(s2);
 
-		while (k<10) {
+		while (i < s1.length && j < s2.length) {
 			if (s1[i].compareTo(s2[j]) < 0) {
 				s3[k] = s1[i];
 				i++;
@@ -30,6 +28,14 @@ public class homework_1 {
 				j++;
 				k++;
 			}
+		}
+		while (i == s1.length) {
+			s3[k] = s2[j];
+			break;
+		}
+		while (j == s2.length) {
+			s3[k] = s1[i];
+			break;
 		}
 		return s3;
 	}
