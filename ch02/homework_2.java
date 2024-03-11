@@ -20,11 +20,21 @@ class PhyscData implements Comparable<PhyscData> {
 
 	@Override
 	public int compareTo(PhyscData p) {
-		return this.name.compareTo(p.name);
+		if(name.compareTo(p.name)>0)
+			return 1;
+		else if (name.compareTo(p.name)<0)
+			return -1;
+		else
+			return 0;
 	}
 
 	public int equals(PhyscData p) {
-		return this.name.compareTo(p.name);
+		if(name.compareTo(p.name)>0)
+			return 1;
+		else if (name.compareTo(p.name)<0)
+			return -1;
+		else
+			return 0;
 	}
 }
 
