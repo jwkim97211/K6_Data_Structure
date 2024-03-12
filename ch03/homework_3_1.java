@@ -56,7 +56,7 @@ public class homework_3_1 {
 		while(iter3.hasNext()) {
 			String s= iter3.next();
 			if(list4.contains(s))
-				list4.remove(s);
+				continue;
 			else
 				list4.add(s);
 		}
