@@ -18,33 +18,74 @@ class IntQueue3 {
 	private int num; // 현재 데이터 개수
 
 //--- 실행시 예외: 큐가 비어있음 ---//
-
+	public class EmptyIntQueue3Exception extends RuntimeException {
+		public EmptyIntQueue3Exception() {
+		}
+	}
 
 //--- 실행시 예외: 큐가 가득 찼음 ---//
-
+	public class OverflowIntQueue3Exception extends RuntimeException {
+		public OverflowIntQueue3Exception() {
+		}
+	}
 
 //--- 생성자(constructor) ---//
 	public IntQueue3(int maxlen) {
-
+		num = front = rear = 0;
+		capacity = maxlen;
+		try {
+			que = new int[capacity];
+		} catch (OutOfMemoryError e) {
+			capacity = 0;
+		}
 	}
 
 //--- 큐에 데이터를 인큐 ---//
 	public int enque(int x) throws OverflowIntQueue3Exception {
-
+		if(isFull())
+			throw new OverflowIntQueue3Exception();
+		que[rear++]= x;
+		num++;
+		if (rear == capacity)
+			rear = 0;
+		return x;
 	}
 
 //--- 큐에서 데이터를 디큐 ---//
 	public int deque() throws EmptyIntQueue3Exception {
 		if (isEmpty())
+			throw new EmptyIntQueue3Exception();
+		int removedata = que[front++];
+		num--;
+		if (front == capacity)
+			front = 0;
+		return removedata;
 
 	}
 
 //--- 큐에서 데이터를 피크(프런트 데이터를 들여다봄) ---//
 	public int peek() throws EmptyIntQueue3Exception {
-
+		if (isEmpty())
+			throw new EmptyIntQueue3Exception();
+		return que[front];
 	}
 
 //--- 큐를 비움 ---//
+	public void clear() throws EmptyIntQueue3Exception {
+		if (isEmpty())
+			throw new EmptyIntQueue3Exception();
+		num = front = rear = 0;
+	}
+
+	public void dump() throws EmptyIntQueue3Exception {
+		if (isEmpty()) {
+			throw new EmptyIntQueue3Exception();
+		} else {
+			for (int i = 0; i < num; i++)
+				System.out.println(que[((i + front) % capacity)] + " ");
+		}
+		System.out.println();
+	}
 
 //--- 큐에서 x를 검색하여 인덱스(찾지 못하면 –1)를 반환 ---//
 	public int indexOf(int x) {
@@ -98,7 +139,7 @@ public class ch04_4_circular {
 				try {
 					oq.enque(rndx);
 				} catch(IntQueue3.OverflowIntQueue3Exception e) {
-					System.out.println("stack이 가득찼있습니다.");
+					System.out.println("큐가 가득 차 있습니다.");
 				}
 				break;
 
@@ -112,20 +153,32 @@ public class ch04_4_circular {
 				break;
 
 			case 3: // 피크
-
+				try {
+					p = oq.peek();
+					System.out.println("피크한 데이터는 " + p + "입니다.");
+				} catch (IntQueue3.EmptyIntQueue3Exception e) {
+					System.out.println("큐가 비어 있습니다.");
+				}
 				break;
-
+				
 			case 4: // 덤프
 				try {
 					oq.dump();
 				} catch (IntQueue3.EmptyIntQueue3Exception e) {
-					System.out.println("queue이 비어있습니다." + e.getMessage());
+					System.out.println("큐가 비어 있습니다." + e.getMessage());
 					e.printStackTrace();
 				}
 				break;
+				
 			case 5: //clear
-
+				try {
+					oq.clear();
+				} catch (IntQueue3.EmptyIntQueue3Exception e) {
+					System.out.println("큐가 비어 있습니다." + e.getMessage());
+					e.printStackTrace();
+				}
 				break;
+
 			default:
 				break;
 			}
