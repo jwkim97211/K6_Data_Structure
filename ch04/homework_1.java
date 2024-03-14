@@ -224,7 +224,7 @@ public class homework_1 {
 				}
 
 				break;
-				
+
 			case 5: // clear도 피크처럼 구현
 				try {
 					s.clear();

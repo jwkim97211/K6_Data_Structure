@@ -17,13 +17,15 @@ class Instack4 { // 외부클래스
 
 //--- 실행시 예외: 스택이 비어있음 ---//
 	public class EmptyIntStackException extends RuntimeException { // 내부클래스
-		public EmptyIntStackException() {
+		public EmptyIntStackException(String message) {
+			super(message);
 		}
 	}
 
 //--- 실행시 예외: 스택이 가득 참 ---//
 	public class OverflowIntStackException extends RuntimeException {
-		public OverflowIntStackException() {
+		public OverflowIntStackException(String message) {
+			super(message);
 		}
 	}
 
@@ -41,21 +43,21 @@ class Instack4 { // 외부클래스
 //--- 스택에 x를 푸시 ---//
 	public int push(int x) throws OverflowIntStackException {
 		if (isFull()) // 스택이 가득 참
-			throw new OverflowIntStackException();
+			throw new OverflowIntStackException("push : stack overflow");
 		return stk[ptr++] = x;
 	}
 
 //--- 스택에서 데이터를 팝(정상에 있는 데이터를 꺼냄) ---//
 	public int pop() throws EmptyIntStackException {
 		if (isEmpty()) // 스택이 빔
-			throw new EmptyIntStackException();
+			throw new EmptyIntStackException("pop : stack empty");
 		return stk[--ptr];
 	}
 
 //--- 스택에서 데이터를 피크(peek, 정상에 있는 데이터를 들여다봄) ---//
 	public int peek() throws EmptyIntStackException {
 		if (isEmpty()) // 스택이 빔
-			throw new EmptyIntStackException();
+			throw new EmptyIntStackException("peek : stack empty");
 		return stk[ptr - 1];
 	}
 
@@ -67,7 +69,7 @@ class Instack4 { // 외부클래스
 		 * 않는다
 		 */
 		if (isEmpty()) // 스택이 빔
-			throw new EmptyIntStackException();
+			throw new EmptyIntStackException("clear : stack empty");
 		else
 			ptr = 0;
 	}
@@ -103,7 +105,7 @@ class Instack4 { // 외부클래스
 //--- 스택 안의 모든 데이터를 바닥 → 정상 순서로 표시 ---//
 	public void dump() throws EmptyIntStackException {
 		if (isEmpty()) {
-			throw new EmptyIntStackException();
+			throw new EmptyIntStackException("dump : stack empty");
 		} else {
 			for (int i = 0; i < ptr; i++)
 				System.out.println(stk[i] + " ");

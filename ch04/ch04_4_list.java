@@ -2,13 +2,13 @@ package ch04;
 
 //선형 큐 구현
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /*
  * Queue of ArrayList
  */
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 //int형 고정 길이 큐
 
@@ -17,23 +17,24 @@ class Queue4 {
 	private int capacity; // 큐의 크기
 	private int front; // 맨 처음 요소 커서
 	private int rear; // 맨 끝 요소 커서
-	private int num; // 현재 데이터 개수
 
 //--- 실행시 예외: 큐가 비어있음 ---//
 	public class EmptyQueueException extends RuntimeException {
-		public EmptyQueueException() {
+		public EmptyQueueException(String message) {
+			super(message);
 		}
 	}
 
 //--- 실행시 예외: 큐가 가득 찼음 ---//
 	public class OverflowQueueException extends RuntimeException {
-		public OverflowQueueException() {
+		public OverflowQueueException(String message) {
+			super(message);
 		}
 	}
 
 //--- 생성자(constructor) ---//
 	public Queue4(int maxlen) {
-		num = front = rear = 0;
+		front = rear = 0;
 		capacity = maxlen;
 		try {
 			que = new ArrayList<>(capacity);
@@ -45,29 +46,24 @@ class Queue4 {
 //--- 큐에 데이터를 인큐 ---//
 	public int enque(int x) throws OverflowQueueException {
 		if (isFull())
-			throw new OverflowQueueException();
+			throw new OverflowQueueException("enque : queue overflow");
 		que.add(rear++, x);
-		num++;
-		if (rear == capacity)
-			rear = 0;
 		return x;
 	}
 
 //--- 큐에서 데이터를 디큐 ---//
 	public int deque() throws EmptyQueueException {
 		if (isEmpty())
-			throw new EmptyQueueException();
-		int removedata = que.get(front++);
-		num--;
-		if (front == capacity)
-			front = 0;
+			throw new EmptyQueueException("deque : queue empty");
+		int removedata = que.remove(front);
+		rear--;
 		return removedata;
 	}
 
 //--- 큐에서 데이터를 피크(프런트 데이터를 들여다봄) ---//
 	public int peek() throws EmptyQueueException {
 		if (isEmpty())
-			throw new EmptyQueueException();
+			throw new EmptyQueueException("peek : queue empty");
 		return que.get(front);
 	}
 
@@ -77,15 +73,15 @@ class Queue4 {
 		 * queue을 empty로 만들어야 한다. queue이 empty일 때 clear()가 호출된 예외 발생해야 한다
 		 */
 		if (isEmpty()) // queue이 빔
-			throw new EmptyQueueException();
-		num = front = rear = 0;
+			throw new EmptyQueueException("clear : queue empty");
+		front = rear = 0;
 	}
 
 	public void dump() throws EmptyQueueException {
 		if (isEmpty()) {
-			throw new EmptyQueueException();
+			throw new EmptyQueueException("dump : queue empty");
 		} else {
-			for (int i = 0; i < num; i++)
+			for (int i = 0; i < rear - front; i++)
 				System.out.println(que.get((i + front) % capacity) + " ");
 		}
 		System.out.println();
@@ -93,7 +89,7 @@ class Queue4 {
 
 //--- 큐에서 x를 검색하여 인덱스(찾지 못하면 –1)를 반환 ---//
 	public int indexOf(int x) {
-		for (int i = 0; i < num; i++) {
+		for (int i = 0; i < rear - front; i++) {
 			int idx = (i + front) % capacity;
 			if (que.get(idx) == x) // 검색 성공
 				return idx;
@@ -108,17 +104,17 @@ class Queue4 {
 
 //--- 큐에 쌓여 있는 데이터 개수를 반환 ---//
 	public int size() {
-		return num;
+		return rear - front;
 	}
 
 //--- 큐가 비어있는가? ---//
 	public boolean isEmpty() {
-		return num <= 0;
+		return rear - front <= 0;
 	}
 
 //--- 큐가 가득 찼는가? ---//
 	public boolean isFull() {
-		return num >= capacity;
+		return rear - front >= capacity;
 	}
 }
 
@@ -140,7 +136,8 @@ public class ch04_4_list {
 				try {
 					oq.enque(rndx);
 				} catch (Queue4.OverflowQueueException e) {
-					System.out.println("큐가 가득 차 있습니다.");
+					System.out.println("큐가 가득 차 있습니다." + e.getMessage());
+					e.printStackTrace();
 				}
 				break;
 
@@ -149,7 +146,8 @@ public class ch04_4_list {
 					p = oq.deque();
 					System.out.println("디큐한 데이터는 " + p + "입니다.");
 				} catch (Queue4.EmptyQueueException e) {
-					System.out.println("큐가 비어 있습니다.");
+					System.out.println("큐가 비어있습니다." + e.getMessage());
+					e.printStackTrace();
 				}
 				break;
 
@@ -158,7 +156,8 @@ public class ch04_4_list {
 					p = oq.peek();
 					System.out.println("피크한 데이터는 " + p + "입니다.");
 				} catch (Queue4.EmptyQueueException e) {
-					System.out.println("큐가 비어 있습니다.");
+					System.out.println("큐가 비어있습니다." + e.getMessage());
+					e.printStackTrace();
 				}
 				break;
 
@@ -166,7 +165,8 @@ public class ch04_4_list {
 				try {
 					oq.dump();
 				} catch (Queue4.EmptyQueueException e) {
-					System.out.println("큐가 비어 있습니다.");
+					System.out.println("큐가 비어있습니다." + e.getMessage());
+					e.printStackTrace();
 				}
 				break;
 
@@ -174,7 +174,8 @@ public class ch04_4_list {
 				try {
 					oq.clear();
 				} catch (Queue4.EmptyQueueException e) {
-					System.out.println("큐가 비어 있습니다.");
+					System.out.println("큐가 비어있습니다." + e.getMessage());
+					e.printStackTrace();
 				}
 				break;
 
