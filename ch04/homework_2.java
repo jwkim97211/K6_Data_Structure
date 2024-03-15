@@ -77,29 +77,30 @@ class CircularQueue {
 	void push(Point5 it) throws OverflowQueueException {
 		if (isFull())
 			throw new OverflowQueueException("push: circular queue overflow");
-		que[++rear] = it;
+		que[rear++] = it;
 		isEmptyTag = false;
 		if (rear == QUEUE_SIZE)
 			rear = 0;
 	}
 
 	Point5 pop() throws EmptyQueueException {
-		if (isEmpty())
-			throw new EmptyQueueException("pop: circular queue overflow");
-		Point5 removedata = que[++front];
-		if (size() == -1)
+		if (isEmpty()) {
 			isEmptyTag = true;
-		else
+			throw new EmptyQueueException("pop: circular queue empty");
+		} else {
+			Point5 removedata = que[front++];
+			if (front == QUEUE_SIZE)
+				front = 0;
 			isEmptyTag = false;
-		if (front == QUEUE_SIZE)
-			front = 0;
-		return removedata;
+			return removedata;
+		}
 	}
 
 	void clear() throws EmptyQueueException {
 		if (isEmpty())
-			throw new EmptyQueueException("enque: circular queue overflow");
+			throw new EmptyQueueException("enque: circular queue empty");
 		front = rear = 0;
+		isEmptyTag=true;
 	}
 
 	// --- 큐의 크기를 반환 ---//
@@ -109,23 +110,30 @@ class CircularQueue {
 
 	// --- 큐에 쌓여 있는 데이터 개수를 반환 ---//
 	public int size() {// front, rear를 사용하여 갯수를 size로 계산
-		int queueSize = -1;
-		if (rear > front) {
-			queueSize = rear - front;
+		int queueSize=-1;
+		if(isEmptyTag) {
+			queueSize=0;
 			return queueSize;
-		} else if (rear == front) {
-			if (isEmptyTag)
-				return queueSize;
-			else
-				return queueSize = QUEUE_SIZE;
 		} else {
-			return QUEUE_SIZE + rear - front;
+			if (rear > front) {
+				queueSize = rear - front;
+				return queueSize;
+			} else if (rear == front) {
+				if (isEmptyTag)
+					return queueSize;
+				else
+					queueSize = QUEUE_SIZE;
+				return queueSize;
+			} else {
+				queueSize = QUEUE_SIZE + rear - front;
+				return queueSize;
+			}
 		}
 	}
 
 	// --- 원형 큐가 비어있는가? --- 수정 필요//
 	public boolean isEmpty() {
-		return size() == -1;
+		return size() == 0;
 	}
 
 	// --- 원형 큐가 가득 찼는가? --- 수정 필요//
@@ -148,7 +156,7 @@ class CircularQueue {
 	public Point5 peek() throws EmptyQueueException {
 		if (isEmpty())
 			throw new EmptyQueueException("peek: queue empty"); // 큐가 비어있음
-		return que[front + 1];
+		return que[front];
 	}
 }
 
