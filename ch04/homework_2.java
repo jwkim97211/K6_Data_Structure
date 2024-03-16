@@ -91,14 +91,17 @@ class CircularQueue {
 			Point5 removedata = que[front++];
 			if (front == QUEUE_SIZE)
 				front = 0;
-			isEmptyTag = false;
+			if(rear==front)
+				isEmptyTag = true;
+			else
+				isEmptyTag =false;
 			return removedata;
 		}
 	}
 
 	void clear() throws EmptyQueueException {
 		if (isEmpty())
-			throw new EmptyQueueException("enque: circular queue empty");
+			throw new EmptyQueueException("clear: circular queue empty");
 		front = rear = 0;
 		isEmptyTag=true;
 	}
@@ -193,6 +196,7 @@ public class homework_2 {
 				try {
 					p = oq.pop();
 					System.out.println("pop: size() = " + oq.size());
+					System.out.println("pop : " + p);
 				} catch (CircularQueue.EmptyQueueException e) {
 					System.out.println("queue이 비어있습니다." + e.getMessage());
 					e.printStackTrace();
