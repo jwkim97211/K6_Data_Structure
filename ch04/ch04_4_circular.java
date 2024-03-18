@@ -50,22 +50,26 @@ class IntQueue3 {
 			throw new OverflowIntQueue3Exception("enque : queue overflow");
 		que[rear++] = x;
 		flag = false;
+		if (rear == capacity)
+			rear = 0;
 		return x;
 	}
 
 //--- 큐에서 데이터를 디큐 ---//
 	public int deque() throws EmptyIntQueue3Exception {
-		if (isEmpty())
-			throw new EmptyIntQueue3Exception("deque : queue empty");
-		int removedata = que[front++];
-		if (size() <= 1)
+		if (isEmpty()) {
 			flag = true;
-		else
-			flag = false;
-		if (front == capacity)
-			front = 0;
-		return removedata;
-
+			throw new EmptyIntQueue3Exception("deque : queue empty");
+		} else {
+			int removedata = que[front++];
+			if (front == capacity)
+				front = 0;
+			if(rear==front)
+				flag = true;
+			else
+				flag =false;
+			return removedata;
+		}
 	}
 
 //--- 큐에서 데이터를 피크(프런트 데이터를 들여다봄) ---//
@@ -109,25 +113,33 @@ class IntQueue3 {
 
 //--- 큐에 쌓여 있는 데이터 개수를 반환 ---//
 	public int size() {
-		if (rear > front)
-			return rear - front;
-		else if (rear == front)
-			if (flag)
-				return 0;
-			else
-				return capacity;
-		else
-			return capacity + rear - front;
+		if (flag) {
+			return 0;
+		} else {
+			if (rear > front) {
+				return rear - front;
+			} else if (rear == front) {
+				if (flag)
+					return 0;
+				else
+					return capacity;
+			} else {
+				return capacity + rear - front;
+			}
+		}
 	}
 
 //--- 원형 큐가 비어있는가? --- 수정 필요//
 	public boolean isEmpty() {
-		return size() <= 0;
+		return size() == 0;
 	}
 
 //--- 원형 큐가 가득 찼는가? --- 수정 필요//
 	public boolean isFull() {
-		return size() >= capacity;
+		if (front == rear && !flag)
+			return true;
+		else
+			return false;
 	}
 }
 

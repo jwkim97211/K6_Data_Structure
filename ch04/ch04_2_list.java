@@ -59,7 +59,7 @@ class IntStack4 {
 //--- 스택에서 데이터를 피크(peek, 정상에 있는 데이터를 들여다봄) ---//
 	public int peek() throws EmptyIntStackException {
 		if (isEmpty()) // 스택이 빔
-			throw new EmptyIntStackException(null);
+			throw new EmptyIntStackException("peek : stack empty");
 		return stk.get(ptr - 1);
 	}
 
@@ -70,7 +70,7 @@ class IntStack4 {
 		 * 않고 대신에 while 문으로 remove()를 반복 실행한다
 		 */
 		if (isEmpty()) // 스택이 빔
-			throw new EmptyIntStackException(null);
+			throw new EmptyIntStackException("clear : stack empty");
 		else
 			while (!isEmpty()) {
 				stk.remove(--ptr);
