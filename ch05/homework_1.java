@@ -156,21 +156,18 @@ public class homework_1 {
 		int numberSolutions = 0;
 		int ix = 0, iy = 0;// 행 ix, 열 iy
 		Stack4 st = new Stack4(100); // 100개를 저장할 수 있는 스택을 만들고
-		System.out.println(st.size());
 		Point p = new Point(ix, iy);// 현 위치를 객체로 만들고
 		d[ix][iy] = 1;
 		count++;
-//		ix++;
 		st.push(p);// 현 위치에 queen을 넣었다는 표시를 하고
+		ix++;
 
 		while (true) {
-			System.out.println(":::::::::::::::::::::::");
-			showQueens(d);
 			if (count == 8) {
 				showQueens(d);
 				break;
 			}
-			iy = nextMove(d, ++ix, iy);
+			iy = nextMove(d, ix, iy);
 			if (iy == -1) {
 				try {
 					p = st.pop();
@@ -189,7 +186,7 @@ public class homework_1 {
 				d[ix][iy] = 1;
 				count++;
 				ix++;
-				iy=0;
+				iy = 0;
 				continue;
 			}
 		}
@@ -197,44 +194,48 @@ public class homework_1 {
 
 	// 배열 d에서 행 cx, 열 cy에 퀸을 남서, 북동 대각선으로 배치할 수 있는지 조사
 	public static boolean checkDiagSW(int[][] d, int cx, int cy) { // x++, y-- or x--, y++ where 0<= x,y <= 7
-		while (cx >= 0 && cy >= 0 && cx <= 7 && cy <= 7) {
-			if (d[cx][cy] == 1) {
+		int x = cx;
+		int y = cy;
+		while (x >= 0 && y >= 0 && x <= 7 && y <= 7) {
+			if (d[x][y] == 1) {
 				return false;
-			} else {
-				cx++;
-				cy++;
 			}
+			x++;
+			y++;
 		}
 
-		while (cx >= 0 && cy >= 0 && cx <= 7 && cy <= 7) {
-			if (d[cx][cy] == 1) {
+		x = cx;
+		y = cy;
+		while (x >= 0 && y >= 0 && x <= 7 && y <= 7) {
+			if (d[x][y] == 1) {
 				return false;
-			} else {
-				cx--;
-				cy--;
 			}
+			x--;
+			y--;
 		}
 		return true;
 	}
 
 	// 배열 d에서 행 cx, 열 cy에 퀸을 남동, 북서 대각선으로 배치할 수 있는지 조사
 	public static boolean checkDiagSN(int[][] d, int cx, int cy) {// x++, y++ or x--, y--
-		while (cx >= 0 && cy >= 0 && cx <= 7 && cy <= 7) {
-			if (d[cx][cy] == 1) {
+		int x = cx;
+		int y = cy;
+		while (x >= 0 && y >= 0 && x <= 7 && y <= 7) {
+			if (d[x][y] == 1) {
 				return false;
-			} else {
-				cx++;
-				cy--;
 			}
+			x++;
+			y--;
 		}
 
-		while (cx >= 0 && cy >= 0 && cx <= 7 && cy <= 7) {
-			if (d[cx][cy] == 1) {
+		x = cx;
+		y = cy;
+		while (x >= 0 && y >= 0 && x <= 7 && y <= 7) {
+			if (d[x][y] == 1) {
 				return false;
-			} else {
-				cx--;
-				cy++;
 			}
+			x--;
+			y++;
 		}
 		return true;
 	}
@@ -263,7 +264,7 @@ public class homework_1 {
 
 	// 배열 d에서 현재 위치(row,col)에 대하여 다음에 이동할 위치 nextCol을 반환, 이동이 가능하지 않으면 -1를 리턴
 	public static int nextMove(int[][] d, int row, int col) {// 현재 row, col에 대하여 이동할 col을 return
-		for (int i = 0; i < d[0].length; i++) {
+		for (int i = col; i < d[0].length; i++) {
 			if (checkMove(d, row, i))
 				return i;
 		}
