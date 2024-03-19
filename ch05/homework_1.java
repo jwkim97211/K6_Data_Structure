@@ -79,6 +79,7 @@ class Stack4 {
 	// --- 생성자(constructor) ---//
 	public Stack4(int capacity) {
 		top = 0;
+		this.capacity = capacity;
 		data = new ArrayList<>(capacity);
 	}
 
@@ -155,53 +156,106 @@ public class homework_1 {
 		int numberSolutions = 0;
 		int ix = 0, iy = 0;// 행 ix, 열 iy
 		Stack4 st = new Stack4(100); // 100개를 저장할 수 있는 스택을 만들고
+		System.out.println(st.size());
 		Point p = new Point(ix, iy);// 현 위치를 객체로 만들고
-		d[ix][iy] = 1;// 현 위치에 queen을 넣었다는 표시를 하고
-//		count++;
-		
+		d[ix][iy] = 1;
+		count++;
+//		ix++;
+		st.push(p);// 현 위치에 queen을 넣었다는 표시를 하고
+
 		while (true) {
-			int newcol = nextMove(d, ix, iy);
-			if(newcol!=-1) {
-				Point newpoint = new Point(ix, newcol);
-				st.push(newpoint);
+			System.out.println(":::::::::::::::::::::::");
+			showQueens(d);
+			if (count == 8) {
+				showQueens(d);
+				break;
+			}
+			iy = nextMove(d, ++ix, iy);
+			if (iy == -1) {
+				try {
+					p = st.pop();
+					ix = p.getX();
+					iy = p.getY();
+					d[ix][iy] = 0;
+					count--;
+					iy++;
+					continue;
+				} catch (Stack4.EmptyGenericStackException e) {
+					e.printStackTrace();
+				}
+			} else {
+				p = new Point(ix, iy);
+				st.push(p);
+				d[ix][iy] = 1;
+				count++;
+				ix++;
+				iy=0;
 				continue;
 			}
-			if(st.isEmpty()!=true) {
-				st.pop();
-				continue;
-			}
-			break;
+		}
 	}
 
 	// 배열 d에서 행 cx, 열 cy에 퀸을 남서, 북동 대각선으로 배치할 수 있는지 조사
 	public static boolean checkDiagSW(int[][] d, int cx, int cy) { // x++, y-- or x--, y++ where 0<= x,y <= 7
+		while (cx >= 0 && cy >= 0 && cx <= 7 && cy <= 7) {
+			if (d[cx][cy] == 1) {
+				return false;
+			} else {
+				cx++;
+				cy++;
+			}
+		}
 
+		while (cx >= 0 && cy >= 0 && cx <= 7 && cy <= 7) {
+			if (d[cx][cy] == 1) {
+				return false;
+			} else {
+				cx--;
+				cy--;
+			}
+		}
+		return true;
 	}
 
 	// 배열 d에서 행 cx, 열 cy에 퀸을 남동, 북서 대각선으로 배치할 수 있는지 조사
-	public static boolean checkDiagSE(int[][] d, int cx, int cy) {// x++, y++ or x--, y--
+	public static boolean checkDiagSN(int[][] d, int cx, int cy) {// x++, y++ or x--, y--
+		while (cx >= 0 && cy >= 0 && cx <= 7 && cy <= 7) {
+			if (d[cx][cy] == 1) {
+				return false;
+			} else {
+				cx++;
+				cy--;
+			}
+		}
 
+		while (cx >= 0 && cy >= 0 && cx <= 7 && cy <= 7) {
+			if (d[cx][cy] == 1) {
+				return false;
+			} else {
+				cx--;
+				cy++;
+			}
+		}
+		return true;
 	}
 
 	public static boolean checkRow(int[][] d, int crow) {
-		for (int i = 0; i < d[0].length; i++)
-			for (int j = 0; j < d[0].length; j++)
-				if (d[i][j] == d[crow][j])
-					return false;
+		for (int i = 0; i < d.length; i++)
+			if (d[crow][i] == 1)
+				return false;
 		return true;
 	}
 
 	public static boolean checkCol(int[][] d, int ccol) {
 		for (int i = 0; i < d[0].length; i++)
-			for (int j = 0; j < d[0].length; j++)
-				if (d[i][j] == d[i][ccol])
-					return false;
+			if (d[i][ccol] == 1)
+				return false;
 		return true;
 	}
 
 	// 배열 d에서 (x,y)에 퀸을 배치할 수 있는지 조사
 	public static boolean checkMove(int[][] d, int x, int y) {// (x,y)로 이동 가능한지를 check
-		if (checkRow(d, x) && checkCol(d, y) && checkDiagSW(d, x, y) && checkDiagSE(d, x, y))
+		if (checkRow(d, x) && checkCol(d, y) && checkDiagSW(d, x, y) && checkDiagSN(d, x, y))
 			return true;
 		else
 			return false;
