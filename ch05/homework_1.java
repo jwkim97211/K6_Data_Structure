@@ -87,7 +87,8 @@ class Stack4 {
 	public void push(Point x) throws OverflowGenericStackException {
 		if (isFull())
 			throw new OverflowGenericStackException("push : stack overflow");
-		data.add(top++, x);
+		data.add(x);
+		top++;
 	}
 
 	// --- 스택에서 데이터를 팝(정상에 있는 데이터를 꺼냄) ---//
