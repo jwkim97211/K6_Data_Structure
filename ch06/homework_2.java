@@ -8,12 +8,33 @@ class Polynomial implements Comparable<Polynomial> {
     	this.coef=coef;
     	this.exp=exp;
     }
+
+	@Override
+	public int compareTo(Polynomial o) {
+		if (this.coef > o.coef)
+			return 1;
+		else if (this.coef < o.coef)
+			return -1;
+		else
+			return 0;
+	}
 }
 
 public class homework_2 {
 
 	static void merge(Polynomial[] a, int lefta, int righta, int leftb, int rightb) {
-
+		Polynomial[] temp = new Polynomial[a.length];
+		int idx = 0;
+		int p = lefta, q = leftb;
+		while (p <= righta && q <= rightb) {
+			if (a[p].compareTo(a[q])==-1) temp[idx++] = a[p++];
+			else if (a[p].compareTo(a[q])==1) temp[idx++] = a[q++];
+			else {
+				temp[idx++] = a[p++];temp[idx++] = a[q++];
+			}
+		}
+		while (p > righta && q <= rightb) temp[idx++] = a[q++];
+		while (q > rightb && p <= righta) temp[idx++] = a[p++];
 	}
 
 	// --- 퀵 정렬(비재귀 버전)---//
@@ -55,9 +76,8 @@ public class homework_2 {
 		Polynomial[] z = new Polynomial[20];
 		AddPolynomial(x, y, z);// 다항식 덧셈 z = x + y
 		ShowPolynomial(z);
-		ShowPolynomial(y);
 		MultiplyPolynomial(x, y, z);// 다항식 곱셈 z = x * y
-		ShowPolynomial(y);
+		ShowPolynomial(z);
 		int result = EvaluatePolynomial(z, 10);// 다항식 값 계산 함수 z(10) 값 계산한다
 		System.out.println(" result = " + result);
 	}

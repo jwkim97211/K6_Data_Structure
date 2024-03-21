@@ -15,10 +15,6 @@ class PhyscData implements Comparable<PhyscData> {
 		this.vision = vision;
 	}
 
-	public String toString() {
-		return "[name=" + name + ", height=" + height + ", vision=" + vision + "]";
-	}
-
 	@Override
 	public int compareTo(PhyscData o) {
 		if (this.height > o.height)
@@ -35,31 +31,16 @@ public class homework_1 {
 	static void merge(PhyscData[] a, int lefta, int righta, int leftb, int rightb) {
 		PhyscData[] temp = new PhyscData[a.length];
 		int idx = 0;
-		int numa = 0;
-		int numb = 0;
-		for (int i = 0; i < righta; i++) {
-			for (int j = righta + 1; j < rightb; j++) {
-				if (a[i].compareTo(a[j]) == 1) {
-					temp[idx] = a[i];
-					idx++;
-					numa++;
-				} else if (a[i].compareTo(a[j]) == -1) {
-					temp[idx] = a[j];
-					idx++;
-					numb++;
-				}
-//				while (numa == 4) {
-//					temp[idx++] = a[j++];
-//					break;
-//				}
-//				while (numb == 4) {
-//					temp[idx++] = a[i++];
-//					break;
-//				}
+		int p = lefta, q = leftb;
+		while (p <= righta && q <= rightb) {
+			if (a[p].compareTo(a[q])==-1) temp[idx++] = a[p++];
+			else if (a[p].compareTo(a[q])==1) temp[idx++] = a[q++];
+			else {
+				temp[idx++] = a[p++];temp[idx++] = a[q++];
 			}
 		}
-		for (int i = 0; i < a.length; i++)
-			a[i] = temp[i];
+		while (p > righta && q <= rightb) temp[idx++] = a[q++];
+		while (q > rightb && p <= righta) temp[idx++] = a[p++];
 	}
 
 	// --- 퀵 정렬(비재귀 버전)---//
@@ -74,9 +55,14 @@ public class homework_1 {
 	}
 
 	public static void main(String[] args) {
-		PhyscData[] x = { new PhyscData("강민하", 162, 0.3), new PhyscData("김찬우", 173, 0.7),
-				new PhyscData("박준서", 171, 2.0), new PhyscData("유서범", 171, 1.5), new PhyscData("이수연", 168, 0.4),
-				new PhyscData("장경오", 171, 1.2), new PhyscData("황지안", 169, 0.8), };
+		PhyscData[] x = {new PhyscData("강민하", 162, 0.3),
+						 new PhyscData("김찬우", 173, 0.7),
+						 new PhyscData("박준서", 171, 2.0),
+						 new PhyscData("유서범", 171, 1.5),
+						 new PhyscData("이수연", 168, 0.4),
+						 new PhyscData("장경오", 171, 1.2),
+						 new PhyscData("황지안", 169, 0.8),
+						 };
 		int nx = x.length;
 
 		MergeSort(x, 0, nx - 1); // 배열 x를 퀵정렬
