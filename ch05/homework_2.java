@@ -156,15 +156,23 @@ public class homework_2 {
 				int h = j + moves[d].b;
 				if ((g == ix) && (h == iy)) { // reached exit
 					mark[g][h]=2;
+					mark[i][j]=2;
+					st.clear();
 					System.out.println("Escape from the maze");
-					return;							// output path
+					break;							// output path
 				}
 				if ((maze[g][h] == 0) && (mark[g][h] == 0)) { // new position
 					mark[g][h]=2;
-					temp=new Items3(g,h,0);
+					mark[i][j]=2;
+					temp=new Items3(i,j,d);
 					st.push(temp);
+					i=g;
+					j=h;
+					d=0;
 				} else {
+					mark[i][j]=1;
 					d++;
+					continue;
 				}
 			}
 		}
@@ -200,22 +208,14 @@ public class homework_2 {
 				};
 		for (int ia = 0; ia < 8; ia++)
 			moves[ia] = new Offsets3(0, 0);// 배열에 offsets 객체를 치환해야 한다.
-		moves[0].a = -1;
-		moves[0].b = 0;
-		moves[1].a = -1;
-		moves[1].b = 1;
-		moves[2].a = 0;
-		moves[2].b = 1;
-		moves[3].a = 1;
-		moves[3].b = 1;
-		moves[4].a = 1;
-		moves[4].b = 0;
-		moves[5].a = 1;
-		moves[5].b = -1;
-		moves[6].a = 0;
-		moves[6].b = -1;
-		moves[7].a = -1;
-		moves[7].b = -1;
+		moves[0].a = -1;		moves[0].b = 0;
+		moves[1].a = -1;		moves[1].b = 1;
+		moves[2].a = 0;			moves[2].b = 1;
+		moves[3].a = 1;			moves[3].b = 1;
+		moves[4].a = 1;			moves[4].b = 0;
+		moves[5].a = 1;			moves[5].b = -1;
+		moves[6].a = 0;			moves[6].b = -1;
+		moves[7].a = -1;		moves[7].b = -1;
 		// Directions d;
 		// d = Directions.N;
 		// d = d + 1;//java는 지원안됨
@@ -233,8 +233,8 @@ public class homework_2 {
 		System.out.println("mark::");
 		showMatrix(mark, 13, 16);
 
-		path(maze, mark, 12, 15);
+		path(maze, mark, 13, 16);
 		System.out.println("mark::");
-		showMatrix(mark, 12, 15);
+		showMatrix(mark, 13, 16);
 	}
 }
