@@ -93,16 +93,16 @@ public class homework_2 {
 		AddPolynomial(x, y, z);// 다항식 덧셈 z = x + y
 		System.out.println("x+y");
 		ShowPolynomial(z);
-		Polynomial[] z1 = new Polynomial[14];
-		MultiplyPolynomial(x, y, z1);// 다항식 곱셈 z = x * y
+		z = new Polynomial[14];
+		MultiplyPolynomial(x, y, z);// 다항식 곱셈 z = x * y
 		System.out.println("x*y");
-		ShowPolynomial(z1);
-		int result = EvaluatePolynomial(z, 10);// 다항식 값 계산 함수 z(10) 값 계산한다
+		ShowPolynomial(z);
+		double result = EvaluatePolynomial(z, 10);// 다항식 값 계산 함수 z(10) 값 계산한다
 		System.out.println(" result = " + result);
 	}
 
-	static int EvaluatePolynomial(Polynomial[] z, int i) {
-		int result=0;
+	static double EvaluatePolynomial(Polynomial[] z, int i) {
+		double result=0;
 		for(int j=0;j<z.length;j++)
 			result+=z[j].coef*Math.pow(i, z[j].exp);
 		return result;
@@ -110,7 +110,7 @@ public class homework_2 {
 
 	static void MultiplyPolynomial(Polynomial[] x, Polynomial[] y, Polynomial[] z) {
 		int idx=0;
-		Polynomial[] z1 = new Polynomial[49];
+		Polynomial[] z1 = new Polynomial[x.length * y.length];
 		for(int i=0;i<x.length;i++) {
 			for(int j=0;j<y.length;j++) {
 				z1[idx++]=new Polynomial(x[i].coef * y[j].coef, x[i].exp+y[j].exp);
@@ -159,6 +159,7 @@ public class homework_2 {
 			z[k++] = new Polynomial(y[j].coef, y[j].exp);
 			j++;
 		}
+		MergeSort(z, 0, k - 1);
 	}
 
 	static void ShowPolynomial(Polynomial[] x) {
