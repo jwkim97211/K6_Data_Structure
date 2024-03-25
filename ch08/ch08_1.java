@@ -22,36 +22,75 @@ class LinkedList1 {
 	}
 
 	public int Delete(int element) {// delete the element
-//제일 처음 ,중간, 제일 끝
+	    if (first == null) {
+	        System.out.println("리스트가 비어있습니다.");
+	        return -1;
+	    }
+
+	    Node1 p = first;
+	    Node1 q = null;
+
+	    while (p != null) {
+	        if (p.data == element) {
+	            if (q == null) {
+	                first = p.link;
+	            } else {
+	                q.link = p.link;
+	            }
+	            return p.data;
+	        }
+	        q = p;
+	        p = p.link;
+	    }
+
+	    System.out.println("삭제할 데이터가 없습니다.");
+	    return -1;
 	}
+
 
 	public void Show() { // 전체 리스트를 순서대로 출력한다.
-
-	}
-
-	public void Add(int element) {// 임의 값을 삽입할 때 리스트가 오름차순으로 정렬이 되도록 한다
-		Node1 temp = new Node1(element);
-		if (first == null) {
-			first = temp;
-			return;
-		} else {
-			Node1 p = first;
-			Node1 q = null;
-			while (p != null) {
-				if (element > p.data) {
-					q = p;
-					p = p.link;
-				} else {
-					temp.link = p;
-					q.link = temp;
-				}
-				//제일 처음 제일 마지막 코딩
-			}
+		Node1 p = first;
+		while (p != null) {
+			System.out.print(p.data + " ");
+			p = p.link;
 		}
 	}
 
+	public void Add(int element) {// 임의 값을 삽입할 때 리스트가 오름차순으로 정렬이 되도록 한다
+	    Node1 temp = new Node1(element);
+
+	    if (first == null) {
+	        first = temp;
+	        return;
+	    }
+
+	    if (element <= first.data) {
+	        temp.link = first;
+	        first = temp;
+	        return;
+	    }
+
+	    Node1 p = first;
+	    Node1 q = null;
+
+	    while (p != null && element > p.data) {
+	        q = p;
+	        p = p.link;
+	    }
+
+	    temp.link = p;
+	    q.link = temp;
+	}
+
 	public boolean Search(int data) { // 전체 리스트를 순서대로 출력한다.
-		return true;
+		Node1 p = first;
+		while (p != null) {
+			if (p.data == data) {
+				return true;
+			}
+			p = p.link;
+		}
+		return false;
 	}
 }
 

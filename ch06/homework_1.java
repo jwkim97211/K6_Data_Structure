@@ -41,6 +41,8 @@ public class homework_1 {
 		}
 		while (p > righta && q <= rightb) temp[idx++] = a[q++];
 		while (q > rightb && p <= righta) temp[idx++] = a[p++];
+		for (int j = 0; j < idx; j++)
+			a[lefta+ j] = temp[j];
 	}
 
 	// --- 퀵 정렬(비재귀 버전)---//
