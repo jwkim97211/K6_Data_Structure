@@ -82,22 +82,69 @@ class CircularList {
 
 	}
 
-	public int Delete(SimpleObject3 element, Comparator<SimpleObject3> cc) // delete the element
-	{
+	public int Delete(SimpleObject3 element, Comparator<SimpleObject3> cc) {// delete the element
+		Node3 q, current = first;
+		q = current;
 
+		while (current != null) {
+			if (cc.compare(current.data, element) == 0) {
+				if (q == first) {
+					first = current.link;
+				} else {
+					q.link = current.link;
+				}
+				return current.data.NO;
+			}
+			current = current.link;
+		}
+		return -1;
 	}
 
 	public void Show() { // 전체 리스트를 순서대로 출력한다.
-
+		Node3 p = first;
+		while (p != null) {
+			System.out.print(p.data + " ");
+			p = p.link;
+		}
 	}
 
-	public void Add(SimpleObject3 element, Comparator<SimpleObject3> cc) // 임의 값을 삽입할 때 리스트가 오름차순으로 정렬이 되도록 한다
-	{
+	public void Add(SimpleObject3 element, Comparator<SimpleObject3> cc) {// 임의 값을 삽입할 때 리스트가 오름차순으로 정렬이 되도록 한다
+		Node3 newNode = new Node3(element);
+		if (first == null) {
+			first = newNode;
+			return;
+		}
 
+		if (cc.compare(element, first.data) < 0) {
+			newNode.link = first;
+			first = newNode;
+			return;
+		}
+
+		Node3 p = first;
+		Node3 q = null;
+
+		while (p != null) {
+			if (cc.compare(element, p.data) > 0) {
+				q = p;
+				p = p.link;
+			} else {
+				break;
+			}
+		}
+		newNode.link = p;
+		q.link = newNode;
 	}
 
 	public boolean Search(SimpleObject3 element, Comparator<SimpleObject3> cc) { // 전체 리스트를 순서대로 출력한다.
-
+		Node3 ptr = first;
+		while (ptr != null) {
+			if (cc.compare(ptr.data, element) == 0) {
+				return true;
+			}
+			ptr = ptr.link;
+		}
+		return false;
 	}
 }
 

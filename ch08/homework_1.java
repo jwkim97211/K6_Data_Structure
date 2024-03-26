@@ -88,13 +88,13 @@ class LinkedList2 {
 				} else {
 					q.link = current.link;
 				}
-				return current.data;
+				return current.data.NO;
 			}
 			current = current.link;
 		}
 		return -1;// 삭제할 대상이 없다.
 	}
-	}
+
 
 	public void Show() { // 전체 리스트를 순서대로 출력한다.
 		Node2 p = first;
@@ -198,24 +198,28 @@ public class homework_1 {
 				data = new SimpleObject();
 				data.scanData("입력", 3);
 				l.Add(data, SimpleObject.NO_ORDER);
+				System.out.println();
 				break;
 			case Delete: // 머리 노드 삭제
 				data = new SimpleObject();
 				data.scanData("삭제", SimpleObject.NO);
 				int num = l.Delete(data, SimpleObject.NO_ORDER);
 				System.out.println("삭제된 데이터 성공은 " + num);
+				System.out.println();
 				break;
 			case Show: // 꼬리 노드 삭제
 				l.Show();
+				System.out.println();
 				break;
 			case Search: // 회원 번호 검색
 				data = new SimpleObject();
 				data.scanData("탐색", SimpleObject.NO);
 				boolean result = l.Search(data, SimpleObject.NO_ORDER);
-				if (result)
+				if (result) 
 					System.out.println("검색 성공 = " + result);
 				else
 					System.out.println("검색 실패 = " + result);
+				System.out.println();
 				break;
 			case Exit: // 꼬리 노드 삭제
 				break;
