@@ -1,7 +1,10 @@
 package ch08;
 
 /*
- * 정수 리스트 > 객체 리스트> 객체 원형 리스트
+ * 정수 리스트 > 객체 리스트> 객체 원형 리스트 
+ * 헤드 노드가 있는 원형 리스트, 헤드 노드가 없는 원형 리스트 구현
+ * merge 구현: in-place 구현, 새로운 노드를 생성하여 합병 구현 
+ * 원형 이중 리스트로 동일하게 적용
  */
 import java.util.Comparator;
 import java.util.Scanner;
@@ -14,7 +17,6 @@ class SimpleObject3 {
 	private String name; // 이름
 
 	// --- 문자열 표현을 반환 ---//
-	@Override
 	public String toString() {
 		return "(" + no + ") " + name;
 	}
@@ -23,12 +25,10 @@ class SimpleObject3 {
 		this.no = no;
 		this.name = name;
 	}
-
-	public SimpleObject3() {
+	public SimpleObject3() {// head node를 만들 때 사용
 		this.no = null;
 		this.name = null;
 	}
-
 	// --- 데이터를 읽어 들임 ---//
 	void scanData(String guide, int sw) {
 		Scanner sc = new Scanner(System.in);
@@ -48,9 +48,8 @@ class SimpleObject3 {
 	public static final Comparator<SimpleObject3> NO_ORDER = new NoOrderComparator();
 
 	private static class NoOrderComparator implements Comparator<SimpleObject3> {
-		@Override
 		public int compare(SimpleObject3 d1, SimpleObject3 d2) {
-			return (d1.no.compareTo(d2.no) > 0) ? 1 : (d1.no.compareTo(d2.no) < 0) ? -1 : 0;
+			return (Integer.parseInt(d1.no)-Integer.parseInt(d2.no) > 0) ? 1 : (Integer.parseInt(d1.no)-Integer.parseInt(d2.no) < 0) ? -1 : 0;
 		}
 	}
 
@@ -58,7 +57,6 @@ class SimpleObject3 {
 	public static final Comparator<SimpleObject3> NAME_ORDER = new NameOrderComparator();
 
 	private static class NameOrderComparator implements Comparator<SimpleObject3> {
-		@Override
 		public int compare(SimpleObject3 d1, SimpleObject3 d2) {
 			return d1.name.compareTo(d2.name);
 		}
@@ -78,50 +76,58 @@ class Node3 {
 class CircularList {
 	Node3 first;
 
-	public CircularList() { // head node
-
+	public CircularList() { //head node
+		SimpleObject3 data = new SimpleObject3();
+		first = new Node3(data);
+		first.link = first;
 	}
 
+	/*
+	 * static void sortData(Fruit []arr, Comparator<Fruit> cc) { for (int i = 0; i <
+	 * arr.length; i++) { for (int j = i; j < arr.length; j++) if
+	 * (cc.compare(arr[i], arr[j])> 0) swap(arr, i, j); } }
+	 */
 	public int Delete(SimpleObject3 element, Comparator<SimpleObject3> cc) {// delete the element
-		Node3 q, current = first;
-		q = current;
-
-		while (current != null) {
-			if (cc.compare(current.data, element) == 0) {
-				if (q == first) {
-					first = current.link;
+		Node3 p = first.link;
+		Node3 q = null;
+		while (p != null) {
+			if (cc.compare(element, p.data) == 0) {
+				if (p == first.link) {
+					first.link = p.link;
 				} else {
-					q.link = current.link;
+					q.link = p.link;
 				}
-				return current.data.NO;
+				return 1;
 			}
-			current = current.link;
+			q = p;
+			p = p.link;
 		}
 		return -1;
 	}
 
 	public void Show() { // 전체 리스트를 순서대로 출력한다.
-		Node3 p = first;
-		while (p != null) {
+		Node3 p = first.link;
+		while (p != first) {
 			System.out.print(p.data + " ");
 			p = p.link;
-		}
+		} 
 	}
 
 	public void Add(SimpleObject3 element, Comparator<SimpleObject3> cc) {// 임의 값을 삽입할 때 리스트가 오름차순으로 정렬이 되도록 한다
 		Node3 newNode = new Node3(element);
-		if (first == null) {
-			first = newNode;
+		if (first.link == null) {
+			first.link = newNode;
+			first.link=first;
 			return;
 		}
 
-		if (cc.compare(element, first.data) < 0) {
-			newNode.link = first;
-			first = newNode;
+		if (cc.compare(element, first.link.data) < 0) {
+			newNode.link = first.link;
+			first.link = newNode;
 			return;
 		}
 
-		Node3 p = first;
+		Node3 p = first.link;
 		Node3 q = null;
 
 		while (p != null) {
@@ -132,13 +138,18 @@ class CircularList {
 				break;
 			}
 		}
-		newNode.link = p;
-		q.link = newNode;
+		if (p == null) {
+			newNode.link=first;
+			q.link = newNode;
+		} else {
+			newNode.link = p;
+			q.link = newNode;
+		}
 	}
 
 	public boolean Search(SimpleObject3 element, Comparator<SimpleObject3> cc) { // 전체 리스트를 순서대로 출력한다.
-		Node3 ptr = first;
-		while (ptr != null) {
+		Node3 ptr = first.link;
+		while (ptr != first) {
 			if (cc.compare(ptr.data, element) == 0) {
 				return true;
 			}
@@ -188,26 +199,26 @@ public class homework_2 {
 
 	public static void main(String[] args) {
 		Menu menu; // 메뉴
-		System.out.println("Linked List");
 		CircularList l = new CircularList();
+		CircularList l2 = new CircularList();
 		Scanner sc = new Scanner(System.in);
 		SimpleObject3 data;
-		System.out.println("inserted");
-		l.Show();
+		int count = 3;//l2 객체의 숫자를 3개로 한다 
+
 		do {
 			switch (menu = SelectMenu()) {
-			case Add: // 머리노드 삽입
+			case Add: //
 				data = new SimpleObject3();
 				data.scanData("입력", 3);
 				l.Add(data, SimpleObject3.NO_ORDER);
 				break;
-			case Delete: // 머리 노드 삭제
+			case Delete: // 
 				data = new SimpleObject3();
 				data.scanData("삭제", SimpleObject3.NO);
 				int num = l.Delete(data, SimpleObject3.NO_ORDER);
 				System.out.println("삭제된 데이터 성공은 " + num);
 				break;
-			case Show: // 꼬리 노드 삭제
+			case Show: 
 				l.Show();
 				break;
 			case Search: // 회원 번호 검색
@@ -225,3 +236,4 @@ public class homework_2 {
 		} while (menu != Menu.Exit);
 	}
 }
+
