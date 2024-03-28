@@ -330,13 +330,13 @@ class Tree5 {
 
 	boolean insert(int x) {// binary search tree를 만드는 입력 : left subtree < 노드 x < right subtree
 		// inorder traversal시에 정렬된 결과가 나와야 한다
+		TreeNode5 p = root;
+		TreeNode5 q = null;
 		TreeNode5 temp = new TreeNode5(x);
 		if (root == null) {
 			root = temp;
 			return true;
 		}
-		TreeNode5 p = root;
-		TreeNode5 q = null;
 		while (p != null) {
 			q = p;
 			if (x == p.data)
@@ -346,13 +346,11 @@ class Tree5 {
 			else
 				p = p.RightChild;
 		}
-		if (x < q.data) {
+		if (x < q.data)
 			q.LeftChild = temp;
-			return true;
-		} else {
+		else
 			q.RightChild = temp;
-			return true;
-		}
+		return true;
 	}
 
 	boolean delete(int num) {// binary search tree에서 임의 값을 갖는 노드를 찾아 삭제한다.
@@ -363,7 +361,6 @@ class Tree5 {
 			return false;
 
 		return false;
-
 	}
 
 	boolean search(int num) {// num 값을 binary search tree에서 검색
@@ -431,7 +428,7 @@ public class ch09 {
 			case Add: //
 				int[] input = new int[count];
 				for (int ix = 0; ix < count; ix++) {
-					input[ix] = rand.nextInt(50);
+					input[ix] = rand.nextInt(100);
 				}
 				for (int n : input)
 					System.out.print(n + " ");
