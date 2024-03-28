@@ -97,17 +97,15 @@ class CircularList {
 				if (q == null) {
 					first.link = p.link;
 				} else {
-					if (p.link == first) {
-						q.link = first;
-					} else {
-						q.link = p.link;
-					}
-					return 1;
+					q.link = p.link;
 				}
-				q = p;
-				p = p.link;
+				return 1;
 			}
+			q = p;
+			p = p.link;
 		}
+		if (p == first)
+			q.link = first;
 		return -1;
 	}
 
@@ -121,9 +119,9 @@ class CircularList {
 
 	public void Add(SimpleObject3 element, Comparator<SimpleObject3> cc) {// 임의 값을 삽입할 때 리스트가 오름차순으로 정렬이 되도록 한다
 		Node3 newNode = new Node3(element);
-		if (first.link == null) {
+		if (first.link == first) {
 			first.link = newNode;
-			first.link = first;
+			newNode.link = first;
 			return;
 		}
 
@@ -141,15 +139,17 @@ class CircularList {
 				q = p;
 				p = p.link;
 			} else {
-				if (p.link == first) {
-					newNode.link = first;
-					p.link = newNode;
-				} else {
-					newNode.link = p;
-					q.link = newNode;
-				}
+				break;
 			}
 		}
+		if (p == first) {
+			newNode.link = first;
+			q.link = newNode;
+		} else {
+			newNode.link = p;
+			q.link = newNode;
+		}
+
 	}
 
 	public boolean Search(SimpleObject3 element, Comparator<SimpleObject3> cc) { // 전체 리스트를 순서대로 출력한다.
@@ -225,6 +225,7 @@ public class homework_2 {
 				break;
 			case Show:
 				l.Show();
+				System.out.println();
 				break;
 			case Search: // 회원 번호 검색
 				data = new SimpleObject3();
@@ -234,6 +235,7 @@ public class homework_2 {
 					System.out.println("검색 성공 = " + result);
 				else
 					System.out.println("검색 실패 = " + result);
+				System.out.println();
 				break;
 			case Exit: // 꼬리 노드 삭제
 				break;
