@@ -1,73 +1,113 @@
 package ch10;
 
-//오픈 주소법에 의한 해시의 사용 예
-
 import java.util.Scanner;
 
-//오픈 주소법에 의한 해시
+//체인법에 의한 해시
+//--- 해시를 구성하는 노드 ---//
 
-class OpenHash2 {
+class Node {
+	private int key; // 키값
+	Node next; // 뒤쪽 포인터(뒤쪽 노드에 대한 참조)
 
-//--- 버킷의 상태 ---//
-	enum Status {
-		OCCUPIED, EMPTY, DELETED
-	} // {데이터 저장, 비어있음, 삭제 완료}
-
-//--- 버킷 ---//
-	static class Bucket {
-		private int data; // 데이터
-		private Status stat; // 상태
-
+	public Node(int element) {
+		key = element;
+		next = null;
 	}
 
+	public int getKey() {
+		return key;
+	}
+}
+
+class SimpleChainHash {
 	private int size; // 해시 테이블의 크기
-	private Bucket[] table; // 해시 테이블
+	private Node[] table; // 해시 테이블
 
-//--- 생성자(constructor) ---//
-	public OpenHash2(int size) {
-
+	public SimpleChainHash(int capacity) {
+		table = new Node[capacity];
+		this.size = capacity;
 	}
 
-//--- 해시값을 구함 ---//
-	public int hashValue(int key) {
-		return key % size;
-	}
-
-//--- 재해시값을 구함 ---//
-	public int rehashValue(int hash) {
-		return (hash + 1) % size;
-	}
-
-//--- 키값 key를 갖는 버킷 검색 ---//
-	private Bucket searchNode(int key) {
-
-	}
-
-//--- 키값이 key인 요소를 검색(데이터를 반환)---//
+	// --- 키값이 key인 요소를 검색(데이터를 반환) ---//
 	public int search(int key) {
+		int hash = key % size;
+		Node p = table[hash];
 
+		while (p != null) {
+			if (p.getKey() == key)
+				return 1;
+			p = p.next;
+		}
+		return -1;
 	}
 
-//--- 키값이 key인 데이터를 data의 요소로 추가 ---//
-	public int add(int data) {
+	// --- 키값이 key인 데이터를 data의 요소로 추가 ---//
+	public int add(int key) {
+		int hash = key % size;
+		Node p = table[hash];
+		Node q = null;
+		Node temp = new Node(key);
 
+		if (table[hash] == null) {
+			table[hash] = temp;
+			return 1;
+		}
+		while (p != null && p.getKey() < key) {
+			q = p;
+			p = p.next;
+		}
+
+		if (p != null && p.getKey() == key)
+			return 0;
+
+		if (q == null) {
+			temp.next = table[hash];
+			table[hash] = temp;
+		} else {
+			temp.next = p;
+			q.next = temp;
+		}
+
+		return 1;
 	}
 
-//--- 키값이 key인 요소를 삭제 ---//
-	public int remove(int key) {
+	// --- 키값이 key인 요소를 삭제 ---//
+	public int delete(int key) {
+		int hash = key % size;
+		Node p = table[hash];
+		Node q = null;
 
+		while (p != null) {
+			if (p.getKey() == key) {
+				if (q == null)
+					table[hash] = p.next;
+				else
+					q.next = p.next;
+				return 1;
+			}
+			q = p;
+			p = p.next;
+		}
+		return -1;
 	}
 
-//--- 해시 테이블을 덤프(dump) ---//
+	// --- 해시 테이블을 덤프(dump) ---//
 	public void dump() {
-
+		for (int i = 0; i < size; i++) {
+			Node p = table[i];
+			while (p != null) {
+				System.out.print(p.getKey() + " ");
+				p = p.next;
+			}
+			System.out.println();
+		}
 	}
 }
 
 public class ch10_3 {
-//--- 메뉴 열거형 ---//
+
 	enum Menu {
-		ADD("추가"), REMOVE("삭제"), SEARCH("검색"), DUMP("표시"), TERMINATE("종료");
+		Add("삽입"), Delete("삭제"), Search("검색"), Show("출력"), Exit("종료");
 
 		private final String message; // 표시할 문자열
 
@@ -87,75 +127,71 @@ public class ch10_3 {
 		}
 	}
 
-//--- 메뉴 선택 ---//
+	// --- 메뉴 선택 ---//
 	static Menu SelectMenu() {
-		Scanner stdIn = new Scanner(System.in);
+		Scanner sc = new Scanner(System.in);
 		int key;
 		do {
-			for (Menu m : Menu.values())
+			for (Menu m : Menu.values()) {
 				System.out.printf("(%d) %s  ", m.ordinal(), m.getMessage());
+				if ((m.ordinal() % 3) == 2 && m.ordinal() != Menu.Exit.ordinal())
+					System.out.println();
+			}
 			System.out.print(" : ");
-			key = stdIn.nextInt();
-		} while (key < Menu.ADD.ordinal() || key > Menu.TERMINATE.ordinal());
-
+			key = sc.nextInt();
+		} while (key < Menu.Add.ordinal() || key > Menu.Exit.ordinal());
 		return Menu.MenuAt(key);
 	}
 
+//체인법에 의한 해시 사용 예
 	public static void main(String[] args) {
-		Menu menu; // 메뉴
-		int select = 0, result = 0, val = 0;
-		final int count = 8;
+		Menu menu;
+		SimpleChainHash hash = new SimpleChainHash(11);
 		Scanner stdIn = new Scanner(System.in);
-		OpenHash2 hash = new OpenHash2(13);
+		int select = 0, result = 0, val = 0;
+		final int count = 15;
 		do {
 			switch (menu = SelectMenu()) {
-			case ADD: // 추가
+			case Add:
 				int[] input = new int[count];
 				for (int ix = 0; ix < count; ix++) {
 					double d = Math.random();
 					input[ix] = (int) (d * 20);
 					System.out.print(" " + input[ix]);
 				}
+				System.out.println();
 				for (int i = 0; i < count; i++) {
-					int k = hash.add(input[i]);
-					switch (k) {
-					case 1:
-						System.out.printf("(%d) -> ", input[i]);
-						System.out.println("그 키값은 이미 등록되어 있습니다.");
-						break;
-					case 2:
-						System.out.println("해시 테이블이 가득 찼습니다.");
-						break;
-					}
+					if ((hash.add(input[i])) == 0)
+						System.out.println("Insert Duplicated data");
 				}
 				break;
-
-			case REMOVE: // 삭제
-				System.out.println("Search Value:: ");
+			case Delete:
+				// Delete
+				System.out.println("Search Key:: ");
 				val = stdIn.nextInt();
-				result = hash.remove(val);
-				if (result == 0)
+				result = hash.delete(val);
+				if (result == 1)
 					System.out.println(" 검색 데이터가 존재한다");
 				else
 					System.out.println(" 검색 데이터가 없음");
 				System.out.println();
 				break;
-
-			case SEARCH: // 검색
-				System.out.println("Search Value:: ");
+			case Search:
+				System.out.println("Search Key:: ");
 				val = stdIn.nextInt();
 				result = hash.search(val);
-				if (result != 0)
+				if (result == 1)
 					System.out.println(" 검색 데이터가 존재한다");
 				else
 					System.out.println(" 검색 데이터가 없음");
 				System.out.println();
 				break;
 
-			case DUMP: // 표시
+			case Show:
 				hash.dump();
 				break;
 			}
-		} while (menu != Menu.TERMINATE);
+		} while (menu != Menu.Exit);
+
 	}
 }

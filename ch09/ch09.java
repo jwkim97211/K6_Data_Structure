@@ -316,18 +316,6 @@ class Tree5 {
 		}
 	}
 
-	void levelOrder() // level 별로 출력한다. level이 증가하면 다음줄에 출력한다
-	// 난이도: 최상급 구현
-	{
-		ObjectQueue5 q = new ObjectQueue5(20);
-		Queue<Integer> que = new LinkedList<>();
-		int oldLevel = 0, newLevel = 0;
-		que.add(oldLevel + 1);
-		TreeNode5 CurrentNode = root;
-		newLevel = que.remove();
-
-	}
-
 	boolean insert(int x) {// binary search tree를 만드는 입력 : left subtree < 노드 x < right subtree
 		// inorder traversal시에 정렬된 결과가 나와야 한다
 		TreeNode5 p = root;
@@ -355,12 +343,43 @@ class Tree5 {
 
 	boolean delete(int num) {// binary search tree에서 임의 값을 갖는 노드를 찾아 삭제한다.
 		// 삭제 대상이 leaf node인 경우, non-leaf node로 구분하여 구현한다
-		TreeNode5 p = root, q = null, parent = null;
+		TreeNode5 p = root, parent = null;
 		int branchMode = 0; // 1은 left, 2는 right
 		if (root == null)
 			return false;
-
-		return false;
+		if (p != null) {
+			if (num == p.data)
+				return true;
+			parent = p;
+			if (num < p.data) {
+				p = p.LeftChild;
+				branchMode = 1;
+			} else {
+				p = p.RightChild;
+				branchMode = 2;
+			}
+		}
+		if (isLeafNode(p)) {
+			if (branchMode == 2)
+				parent.RightChild = null;
+			else
+				parent.LeftChild = null;
+		} else if (p.LeftChild != null && p.RightChild != null) {
+			TreeNode5 inorder = inorderSucc(p);
+			p.data = inorder.data;
+			delete(inorder.data);
+		} else {
+			TreeNode5 child = null;
+			if (p.LeftChild != null)
+				child = p.LeftChild;
+			else
+				child = p.RightChild;
+			if (branchMode == 1)
+				parent.LeftChild = child;
+			else
+				parent.RightChild = child;
+		}
+		return true;
 	}
 
 	boolean search(int num) {// num 값을 binary search tree에서 검색
@@ -432,6 +451,7 @@ public class ch09 {
 				}
 				for (int n : input)
 					System.out.print(n + " ");
+				System.out.println();
 				for (int i = 0; i < count; i++) {
 					if (!t.insert(input[i]))
 						System.out.println("Insert Duplicated data");
@@ -461,11 +481,6 @@ public class ch09 {
 
 			case InorderPrint: // 전체 노드를 키값의 오름차순으로 표시
 				t.inorder();
-				System.out.println();
-				// t.NonrecInorder();
-				break;
-			case LevelorderPrint: //
-				t.levelOrder();
 				System.out.println();
 				// t.NonrecInorder();
 				break;
