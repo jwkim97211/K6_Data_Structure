@@ -49,7 +49,8 @@ class SimpleObject4 {
 	private static class NoOrderComparator implements Comparator<SimpleObject4> {
 		@Override
 		public int compare(SimpleObject4 d1, SimpleObject4 d2) {
-			return (d1.no.compareTo(d2.no) > 0) ? 1 : (d1.no.compareTo(d2.no) < 0) ? -1 : 0;
+			return (Integer.parseInt(d1.no) - Integer.parseInt(d2.no) > 0) ? 1
+					: (Integer.parseInt(d1.no) - Integer.parseInt(d2.no) < 0) ? -1 : 0;
 		}
 	}
 
@@ -78,6 +79,7 @@ class ObjectStack4 {
 	// --- 실행시 예외: 스택이 가득 참 ---//
 	public class OverflowGenericStackException extends RuntimeException {
 		public OverflowGenericStackException() {
+			super();
 		}
 	}
 
@@ -374,29 +376,90 @@ class Tree4 {
 		// left subtree < x < right subtree
 		TreeNode4 p = root;
 		TreeNode4 q = null;
-
+		TreeNode4 temp = new TreeNode4(obj);
+		if (root == null) {
+			root = temp;
+			return true;
+		}
+		while (p != null) {
+			q = p;
+			if (c.compare(p.data, obj) == 0)
+				return false;
+			if (c.compare(p.data, obj) > 0)
+				p = p.LeftChild;
+			else
+				p = p.RightChild;
+		}
+		if (c.compare(q.data, obj) > 0)
+			q.LeftChild = temp;
+		else
+			q.RightChild = temp;
+		return true;
 	}
 
 	public boolean delete(SimpleObject4 obj, Comparator<? super SimpleObject4> c) {
 		// 주어진 객체 obj를 포함한 노드를 찾아 삭제하는 알고리즘
 		// 난이도: 최상급 중에서 최상급
-		TreeNode4 p = root, q = null;
+		TreeNode4 p = root, parent = null;
+		int branchMode = 0; // 1은 left, 2는 right
+		TreeNode4 inorder = new TreeNode4();
+		while (p != null) {
+			if (c.compare(p.data, obj) == 0) {
+				if (isLeafNode(p)) {
+					if (p == root) {
+						root = null;
+						return true;
+					}
+					if (branchMode == 2)
+						parent.RightChild = null;
+					else
+						parent.LeftChild = null;
+				} else {
+					if (p.LeftChild == null) {
+						if (branchMode == 1)
+							parent.LeftChild = p.RightChild;
+						else
+							parent.RightChild = p.RightChild;
+					} else if (p.RightChild == null) {
+						if (branchMode == 1)
+							parent.LeftChild = p.LeftChild;
+						else
+							parent.RightChild = p.LeftChild;
+					} else {
+						inorder = inorderSucc(p);
+						delete(inorder.data, c);
+						p.data = inorder.data;
+					}
+				}
+				return true;
+			}
+			parent = p;
+			if (c.compare(p.data, obj) > 0) {
+				p = p.LeftChild;
+				branchMode = 1;
+			} else {
+				p = p.RightChild;
+				branchMode = 2;
+			}
+		}
+		return false;
 
 	}
 
 	boolean search(SimpleObject4 obj, Comparator<? super SimpleObject4> c) {
 		// 주어진 객체 obj를 갖는 노드를 찾는 문제
 		TreeNode4 p = root;
-
+		while (true) {
+			if (p == null)
+				return false;
+			if (c.compare(p.data, obj) == 0)
+				return true;
+			else if (c.compare(p.data, obj) > 0)
+				p = p.LeftChild;
+			else
+				p = p.RightChild;
+		}
 	}
-
-//	void levelOrder()
-//	// root 부터 level별로 출력 : root는 level 1, level 2는 다음줄에 => 같은 level이면 같은 줄에 출력하게 한다
-//	{
-//		ObjectQueue4 q = new ObjectQueue4(20);
-//		TreeNode4 CurrentNode = root;
-//
-//	}
 
 	void NonrecInorder()// void Tree::inorder(TreeNode4 *CurrentNode)와 비교
 	// stack을 이용하여 inorder traversal하는 알고리즘 구현
@@ -452,8 +515,8 @@ public class homework_1 {
 		int key;
 		do {
 			for (Menu m : Menu.values())
-				System.out.printf("(%d) %s  ", m.ordinal(), m.getMessage());
-			System.out.print(" : ");
+				System.out.printf("(%d) %s ", m.ordinal(), m.getMessage());
+			System.out.print(": ");
 			key = stdIn.nextInt();
 		} while (key < Menu.Add.ordinal() || key > Menu.Exit.ordinal());
 
@@ -482,7 +545,6 @@ public class homework_1 {
 				so = new SimpleObject4();
 				so.scanData("삭제", SimpleObject4.NO);
 				t.delete(so, SimpleObject4.NO_ORDER);
-
 				break;
 
 			case Search: // 노드 검색
@@ -500,18 +562,16 @@ public class homework_1 {
 				System.out.println();
 				// t.NonrecInorder();
 				break;
-			case LevelorderPrint: // 전체 노드를 키값의 오름차순으로 표시
-				t.levelOrder();
-				System.out.println();
-				// t.NonrecInorder();
-				break;
+
 			case StackInorderPrint: // 전체 노드를 키값의 오름차순으로 표시
 				t.NonrecInorder();
 				break;
+
 			case PreorderPrint:// prefix 출력
 				t.preorder();
 				System.out.println();
 				break;
+
 			case PostorderPrint:// postfix로 출력
 				t.postorder();
 				System.out.println();

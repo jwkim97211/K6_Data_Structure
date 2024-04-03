@@ -345,11 +345,37 @@ class Tree5 {
 		// 삭제 대상이 leaf node인 경우, non-leaf node로 구분하여 구현한다
 		TreeNode5 p = root, parent = null;
 		int branchMode = 0; // 1은 left, 2는 right
-		if (root == null)
-			return false;
-		if (p != null) {
-			if (num == p.data)
+		TreeNode5 inorder = new TreeNode5();
+		while (p != null) {
+			if (num == p.data) {
+				if (isLeafNode(p)) {
+					if (p == root) {
+						root = null;
+						return true;
+					}
+					if (branchMode == 2)
+						parent.RightChild = null;
+					else
+						parent.LeftChild = null;
+				} else {
+					if (p.LeftChild == null) {
+						if (branchMode == 1)
+							parent.LeftChild = p.RightChild;
+						else
+							parent.RightChild = p.RightChild;
+					} else if (p.RightChild == null) {
+						if (branchMode == 1)
+							parent.LeftChild = p.LeftChild;
+						else
+							parent.RightChild = p.LeftChild;
+					} else {
+						inorder = inorderSucc(p);
+						delete(inorder.data);
+						p.data = inorder.data;
+					}
+				}
 				return true;
+			}
 			parent = p;
 			if (num < p.data) {
 				p = p.LeftChild;
@@ -359,27 +385,7 @@ class Tree5 {
 				branchMode = 2;
 			}
 		}
-		if (isLeafNode(p)) {
-			if (branchMode == 2)
-				parent.RightChild = null;
-			else
-				parent.LeftChild = null;
-		} else if (p.LeftChild != null && p.RightChild != null) {
-			TreeNode5 inorder = inorderSucc(p);
-			p.data = inorder.data;
-			delete(inorder.data);
-		} else {
-			TreeNode5 child = null;
-			if (p.LeftChild != null)
-				child = p.LeftChild;
-			else
-				child = p.RightChild;
-			if (branchMode == 1)
-				parent.LeftChild = child;
-			else
-				parent.RightChild = child;
-		}
-		return true;
+		return false;
 	}
 
 	boolean search(int num) {// num 값을 binary search tree에서 검색
@@ -426,8 +432,8 @@ public class ch09 {
 		int key;
 		do {
 			for (Menu m : Menu.values())
-				System.out.printf("(%d) %s  ", m.ordinal(), m.getMessage());
-			System.out.print(" : ");
+				System.out.printf("(%d) %s ", m.ordinal(), m.getMessage());
+			System.out.print(": ");
 			key = stdIn.nextInt();
 		} while (key < Menu.Add.ordinal() || key > Menu.Exit.ordinal());
 
